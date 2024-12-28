@@ -19,13 +19,13 @@ This project is designed to demonstrate SQL skills and techniques typically used
 
 ### 1. Database Setup
 
-- **Database Creation**: The project starts by creating a database named `p1_retail_db`.
-- **Table Creation**: A table named `retail_sales` is created to store the sales data. The table structure includes columns for transaction ID, sale date, sale time, customer ID, gender, age, product category, quantity sold, price per unit, cost of goods sold (COGS), and total sale amount.
+- **Database Creation**: The project starts by creating a database named `project`.
+- **Table Creation**: A table named `sales_details` is created to store the sales data. The table structure includes columns for transaction ID, sale date, sale time, customer ID, gender, age, product category, quantity sold, price per unit, cost of goods sold (COGS), and total sale amount.
 
 ```sql
-CREATE DATABASE p1_retail_db;
+CREATE DATABASE project;
 
-CREATE TABLE retail_sales
+CREATE TABLE sales_details
 (
     transactions_id INT PRIMARY KEY,
     sale_date DATE,	
@@ -49,17 +49,17 @@ CREATE TABLE retail_sales
 - **Null Value Check**: Check for any null values in the dataset and delete records with missing data.
 
 ```sql
-SELECT COUNT(*) FROM retail_sales;
-SELECT COUNT(DISTINCT customer_id) FROM retail_sales;
-SELECT DISTINCT category FROM retail_sales;
+SELECT COUNT(*) FROM sales_details;
+SELECT COUNT(DISTINCT customer_id) FROM sales_details;
+SELECT DISTINCT category FROM  sales_details;
 
-SELECT * FROM retail_sales
+SELECT * FROM sales_details
 WHERE 
     sale_date IS NULL OR sale_time IS NULL OR customer_id IS NULL OR 
     gender IS NULL OR age IS NULL OR category IS NULL OR 
     quantity IS NULL OR price_per_unit IS NULL OR cogs IS NULL;
 
-DELETE FROM retail_sales
+DELETE FROM sales_details
 WHERE 
     sale_date IS NULL OR sale_time IS NULL OR customer_id IS NULL OR 
     gender IS NULL OR age IS NULL OR category IS NULL OR 
@@ -73,7 +73,7 @@ The following SQL queries were developed to answer specific business questions:
 1. **Write a SQL query to retrieve all columns for sales made on '2022-11-05**:
 ```sql
 SELECT *
-FROM retail_sales
+FROM sales_details
 WHERE sale_date = '2022-11-05';
 ```
 
@@ -81,7 +81,7 @@ WHERE sale_date = '2022-11-05';
 ```sql
 SELECT 
   *
-FROM retail_sales
+FROM sales_details
 WHERE 
     category = 'Clothing'
     AND 
@@ -96,7 +96,7 @@ SELECT
     category,
     SUM(total_sale) as net_sale,
     COUNT(*) as total_orders
-FROM retail_sales
+FROM sales_details
 GROUP BY 1
 ```
 
@@ -104,13 +104,13 @@ GROUP BY 1
 ```sql
 SELECT
     ROUND(AVG(age), 2) as avg_age
-FROM retail_sales
+FROM sales_details
 WHERE category = 'Beauty'
 ```
 
 5. **Write a SQL query to find all transactions where the total_sale is greater than 1000.**:
 ```sql
-SELECT * FROM retail_sales
+SELECT * FROM sales_details
 WHERE total_sale > 1000
 ```
 
@@ -120,12 +120,12 @@ SELECT
     category,
     gender,
     COUNT(*) as total_trans
-FROM retail_sales
+FROM sales_details
 GROUP 
     BY 
     category,
     gender
-ORDER BY 1
+ORDER BY category
 ```
 
 7. **Write a SQL query to calculate the average sale for each month. Find out best selling month in each year**:
@@ -141,8 +141,9 @@ SELECT
     EXTRACT(MONTH FROM sale_date) as month,
     AVG(total_sale) as avg_sale,
     RANK() OVER(PARTITION BY EXTRACT(YEAR FROM sale_date) ORDER BY AVG(total_sale) DESC) as rank
-FROM retail_sales
-GROUP BY 1, 2
+FROM sales_details
+GROUP BY  EXTRACT(YEAR FROM sale_date),
+        EXTRACT(MONTH FROM sale_date)
 ) as t1
 WHERE rank = 1
 ```
@@ -152,9 +153,9 @@ WHERE rank = 1
 SELECT 
     customer_id,
     SUM(total_sale) as total_sales
-FROM retail_sales
-GROUP BY 1
-ORDER BY 2 DESC
+FROM sales_details
+GROUP BY customer_id
+ORDER BY SUM(total_sale)  DESC
 LIMIT 5
 ```
 
@@ -162,8 +163,8 @@ LIMIT 5
 ```sql
 SELECT 
     category,    
-    COUNT(DISTINCT customer_id) as cnt_unique_cs
-FROM retail_sales
+    COUNT(DISTINCT customer_id) as unique_customers
+FROM sales_details
 GROUP BY category
 ```
 
@@ -178,7 +179,7 @@ SELECT *,
         WHEN EXTRACT(HOUR FROM sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
         ELSE 'Evening'
     END as shift
-FROM retail_sales
+FROM sales_details
 )
 SELECT 
     shift,
@@ -211,17 +212,9 @@ This project serves as a comprehensive introduction to SQL for data analysts, co
 3. **Run the Queries**: Use the SQL queries provided in the `analysis_queries.sql` file to perform your analysis.
 4. **Explore and Modify**: Feel free to modify the queries to explore different aspects of the dataset or answer additional business questions.
 
-## Author - Zero Analyst
+## Author - Sahil rawat
 
 This project is part of my portfolio, showcasing the SQL skills essential for data analyst roles. If you have any questions, feedback, or would like to collaborate, feel free to get in touch!
 
-### Stay Updated and Join the Community
-
-For more content on SQL, data analysis, and other data-related topics, make sure to follow me on social media and join our community:
-
-- **YouTube**: [Subscribe to my channel for tutorials and insights](https://www.youtube.com/@zero_analyst)
-- **Instagram**: [Follow me for daily tips and updates](https://www.instagram.com/zero_analyst/)
-- **LinkedIn**: [Connect with me professionally](https://www.linkedin.com/in/najirr)
-- **Discord**: [Join our community to learn and grow together](https://discord.gg/36h5f2Z5PK)
-
+email_adress :- sahilrwt0001@gmail.com
 Thank you for your support, and I look forward to connecting with you!
